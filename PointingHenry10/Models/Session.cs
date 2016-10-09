@@ -3,12 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Template10.Mvvm;
 namespace PointingHenry10.Models
 {
-    public class Session
+    // TODO http://stackoverflow.com/questions/28844518/bindablebase-vs-inotifychanged
+    public class Session: BindableBase
     {
-        public string Name { get; set; }
+        private string _name;
+        public string Name
+        {
+            get { return _name;}
+            set {
+                _name = value;
+                //this.OnPropertyChanged(_name);
+                //SetProperty(ref _name, value);
+            }
+        }
 
         private User _createdBy;
         public string CreatedBy

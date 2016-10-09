@@ -25,11 +25,7 @@ namespace PointingHenry10.Views
         public List()
         {
             this.InitializeComponent();
-            List<Session> items = new List<Session>();
-            items.Add(new Session() { Name = "Session1", CreatedBy = "Passos" });
-            items.Add(new Session() { Name = "Session2", CreatedBy = "Summers" });
-            items.Add(new Session() { Name = "Session3", CreatedBy = "Julio" });
-            listSessions.ItemsSource = items;
+            listSessions.ItemsSource = this.ListViewModel.Sessions;
             textBox.Text = "";
         }
 
@@ -47,6 +43,7 @@ namespace PointingHenry10.Views
                 // http://stackoverflow.com/questions/37976653/template-10-navigation-fails-windows-ui-xaml-controls-frame-navigationfailed-wa
                 var list = new Dictionary<string, string>() { { "session", sessionName }, { "nick", textBox.Text} };
                 string str = SerializationService.Json.Serialize(list);
+                // TODO Navigate should be done in ViewModel
                 Frame.Navigate(typeof(CreateSession), str);
             }
         }

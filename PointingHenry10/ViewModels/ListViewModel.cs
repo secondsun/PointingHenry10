@@ -5,16 +5,22 @@ using System.Linq;
 using System.Threading.Tasks;
 using Template10.Services.NavigationService;
 using Windows.UI.Xaml.Navigation;
+using PointingHenry10.Models;
 
 namespace PointingHenry10.ViewModels
 {
     public class ListViewModel : ViewModelBase
     {
+        public List<Session> Sessions;
         public ListViewModel()
         {
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
             }
+            Sessions = new List<Session>();
+            Sessions.Add(new Session() { Name = "Session1", CreatedBy = "Passos" });
+            Sessions.Add(new Session() { Name = "Session2", CreatedBy = "Summers" });
+            Sessions.Add(new Session() { Name = "Session3", CreatedBy = "Julio" });
         }
 
 
