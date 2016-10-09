@@ -55,21 +55,24 @@
             </controls:PageHeader.SecondaryCommands>
 
         </controls:PageHeader>
-        <TextBox x:Name="textBox" PlaceholderText="Enter your name" TextWrapping="Wrap" HorizontalAlignment="Center" Margin="16" RelativePanel.AlignLeftWithPanel="True"
+
+
+
+
+
+        <TextBox x:Name="textBox" PlaceholderText="Enter your name" Text="{Binding textBox}" TextWrapping="Wrap" HorizontalAlignment="Center" Margin="16" RelativePanel.AlignLeftWithPanel="True"
             RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="pageHeader"/>
         <ListView x:Name="listSessions" HorizontalAlignment="Center" Margin="16" RelativePanel.AlignLeftWithPanel="True"
             RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="textBox">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Button BorderThickness="0" Background="Transparent">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Session:  " />
-                            <TextBlock Text="{Binding Name}" />
-                            <TextBlock Text=", " />
-                            <TextBlock Text="created by: " />
-                            <TextBlock Text="{Binding CreatedBy}"/>
-                        </StackPanel>
-                    </Button>
+                    <StackPanel Tapped="StackPanel_Tapped" Orientation="Horizontal">
+                        <TextBlock Text="Session:  " />
+                        <TextBlock Text="{Binding Name}" />
+                        <TextBlock Text=", " />
+                        <TextBlock Text="created by: " />
+                        <TextBlock Text="{Binding CreatedBy}"/>
+                    </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
