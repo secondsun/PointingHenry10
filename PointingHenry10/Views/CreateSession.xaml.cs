@@ -13,6 +13,7 @@ namespace PointingHenry10.Views
         {
             InitializeComponent();
             NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
+            sessionName.Text = ViewModel.SessionName;
         }
         
     }

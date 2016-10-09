@@ -39,8 +39,11 @@
             </controls:PageHeader.SecondaryCommands>
 
         </controls:PageHeader>
-        <TextBlock x:Name="storyDescriptionLabel" HorizontalAlignment="Left" Height="Auto" TextWrapping="Wrap" Text="Story Description" RelativePanel.Below="pageHeader" VerticalAlignment="Top"  Margin="15, 15, 5, 5"/>
+        <TextBlock x:Name="sessionName" HorizontalAlignment="Stretch" Height="32" RelativePanel.Below="pageHeader" TextWrapping="Wrap" Text="{Binding sessionName}"  VerticalAlignment="Top"  Margin="15, 15, 5, 5"/>
+
+        <TextBlock x:Name="storyDescriptionLabel" HorizontalAlignment="Left" Height="Auto" TextWrapping="Wrap" Text="Story Description" RelativePanel.Below="sessionName" VerticalAlignment="Top"  Margin="15, 15, 5, 5"/>
         <TextBox x:Name="storyDescription" HorizontalAlignment="Stretch"  Height="32" RelativePanel.Below="storyDescriptionLabel" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True" Width="Auto" Text=""  Margin="15, 5, 15, 5"/>
+ 
         <ListView x:Name="listView" HorizontalAlignment="Stretch"  Height="Auto" RelativePanel.Below="storyDescription" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True" Width="Auto" Margin="15, 5, 15, 5">
             <ListViewItem>
                 <StackPanel Orientation="Horizontal">

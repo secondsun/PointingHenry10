@@ -11,7 +11,8 @@ using Template10.Mvvm;
 using System.Linq;
 using System.Threading.Tasks;
 using Template10.Services.NavigationService;
-
+using Newtonsoft.Json;
+using Template10.Services.SerializationService;
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace PointingHenry10.Views
@@ -43,9 +44,10 @@ namespace PointingHenry10.Views
             }
             else
             {
-                // TODO call cloud method to add user to selected session, onSuccess go to CreateSession
-                var list = new List<string> { sessionName, textBox.Text };
-                Frame.Navigate(typeof(CreateSession), ""); // TODO ask Erik how toserialize args
+                // http://stackoverflow.com/questions/37976653/template-10-navigation-fails-windows-ui-xaml-controls-frame-navigationfailed-wa
+                var list = new Dictionary<string, string>() { { "session", sessionName }, { "nick", textBox.Text} };
+                string str = SerializationService.Json.Serialize(list);
+                Frame.Navigate(typeof(CreateSession), str);
             }
         }
     }

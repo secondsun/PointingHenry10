@@ -11,11 +11,14 @@ namespace PointingHenry10.ViewModels
 {
     class CreateSessionViewModel : ViewModelBase
     {
+        public string SessionName;
+
         public CreateSessionViewModel()
         {
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
             }
+            SessionName = SessionName ?? "";
         }
 
 
@@ -24,7 +27,11 @@ namespace PointingHenry10.ViewModels
             if (suspensionState.Any())
             {
                 //                Value = suspensionState[nameof(Value)]?.ToString();
+                
             }
+            SessionName = "wwwwwwww";// parameter["sessionName"];
+            // TODO cloud call to create session
+
             await Task.CompletedTask;
         }
 
@@ -41,6 +48,8 @@ namespace PointingHenry10.ViewModels
         {
             args.Cancel = false;
             await Task.CompletedTask;
+            SessionName = "wwwwwwwwq";
+
         }
 
         public void ShareSession() =>
