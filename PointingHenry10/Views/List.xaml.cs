@@ -9,7 +9,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using PointingHenry10.ViewModels;
 using Windows.UI.Xaml.Navigation;
-
+using PointingHenry10.Models;
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace PointingHenry10.Views
@@ -29,10 +29,5 @@ namespace PointingHenry10.Views
             listSessions.ItemsSource = items;
         }
     }
-    public class Session
-    {
-        public string Name { get; set; }
 
-        public string CreatedBy { get; set; }
-    }
 }

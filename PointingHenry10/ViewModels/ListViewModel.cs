@@ -42,11 +42,11 @@ namespace PointingHenry10.ViewModels
             await Task.CompletedTask;
         }
 
-        public void GotoJoinSession() =>
-            NavigationService.Navigate(typeof(Views.CreateSession), "");
-
-        public void GotoCreateSession() =>
-            NavigationService.Navigate(typeof(Views.CreateSession), "");
+        public void GotoJoinSession()
+        {
+            //NavigationService.Navigate(typeof(Views.CreateSession), "");
+        }
+            
 
         public void GotoAbout() =>
             NavigationService.Navigate(typeof(Views.SettingsPage), 2);
