@@ -22,6 +22,17 @@ namespace PointingHenry10.Views
         public List()
         {
             this.InitializeComponent();
+            List<Session> items = new List<Session>();
+            items.Add(new Session() { Name = "Session1", CreatedBy = "Passos" });
+            items.Add(new Session() { Name = "Session2", CreatedBy = "Summers" });
+            items.Add(new Session() { Name = "Session3", CreatedBy = "Julio" });
+            listSessions.ItemsSource = items;
         }
+    }
+    public class Session
+    {
+        public string Name { get; set; }
+
+        public string CreatedBy { get; set; }
     }
 }

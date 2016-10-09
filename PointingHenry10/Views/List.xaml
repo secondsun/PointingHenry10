@@ -57,10 +57,19 @@
         </controls:PageHeader>
         <TextBox x:Name="textBox" PlaceholderText="Enter your name" TextWrapping="Wrap" HorizontalAlignment="Center" Margin="16" RelativePanel.AlignLeftWithPanel="True"
             RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="pageHeader"/>
-        <ListView RelativePanel.Below="textBox">
-            <TextBlock Text="session1"/>
-            <TextBlock Text="session2"/>
-            <TextBlock Text="session3"/>
+        <ListView x:Name="listSessions" HorizontalAlignment="Center" Margin="16" RelativePanel.AlignLeftWithPanel="True"
+            RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="textBox">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Session:  " />
+                        <TextBlock Text="{Binding Name}" />
+                        <TextBlock Text=", " />
+                        <TextBlock Text="created by: " />
+                        <TextBlock Text="{Binding CreatedBy}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
         </ListView>
     </RelativePanel>
 </Page>
