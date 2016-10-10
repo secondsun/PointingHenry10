@@ -11,11 +11,11 @@ using System.ComponentModel;
 
 namespace PointingHenry10.ViewModels
 {
-    class CreateSessionViewModel : ViewModelBase
+    class DetailSessionViewModel : ViewModelBase
     {
         public Session SelectedSession;
 
-        public CreateSessionViewModel()
+        public DetailSessionViewModel()
         {
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
@@ -38,6 +38,8 @@ namespace PointingHenry10.ViewModels
                 var sessionName = dict["session"];
                 var nickName = dict["nick"];
                 SelectedSession.Name = $"{sessionName} created by {nickName}";
+
+                // TODO Add user to existing session
             }
             else
             {
