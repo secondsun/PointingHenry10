@@ -9,11 +9,11 @@ namespace PointingHenry10.Views
 {
     public sealed partial class CreateSession : Page
     {
+
         public CreateSession()
         {
             InitializeComponent();
             NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
         }
-        
     }
 }

@@ -1,31 +1,35 @@
-using System;
+﻿using Template10.Mvvm;
 using System.Collections.Generic;
+using System;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Template10.Common;
-using Template10.Mvvm;
 using Template10.Services.NavigationService;
 using Windows.UI.Xaml.Navigation;
+using PointingHenry10.Models;
 
 namespace PointingHenry10.ViewModels
 {
-    public class DetailPageViewModel : ViewModelBase
+    public class ListViewModel : ViewModelBase
     {
-        public DetailPageViewModel()
+        public List<Session> Sessions;
+        public ListViewModel()
         {
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
-                Value = "Designtime value";
             }
+            Sessions = new List<Session>();
+            Sessions.Add(new Session() { Name = "Session1", CreatedBy = "Passos" });
+            Sessions.Add(new Session() { Name = "Session2", CreatedBy = "Summers" });
+            Sessions.Add(new Session() { Name = "Session3", CreatedBy = "Julio" });
         }
 
-        private string _Value = "Default";
-        public string Value { get { return _Value; } set { Set(ref _Value, value); } }
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
         {
-            Value = (suspensionState.ContainsKey(nameof(Value))) ? suspensionState[nameof(Value)]?.ToString() : parameter?.ToString();
+            if (suspensionState.Any())
+            {
+                //                Value = suspensionState[nameof(Value)]?.ToString();
+            }
             await Task.CompletedTask;
         }
 
@@ -33,7 +37,7 @@ namespace PointingHenry10.ViewModels
         {
             if (suspending)
             {
-                suspensionState[nameof(Value)] = Value;
+                //suspensionState[nameof(Value)] = Value;
             }
             await Task.CompletedTask;
         }
@@ -43,6 +47,15 @@ namespace PointingHenry10.ViewModels
             args.Cancel = false;
             await Task.CompletedTask;
         }
+
+        public void GotoJoinSession()
+        {
+            NavigationService.Navigate(typeof(Views.CreateSession), "");
+        }
+
+        public void GotoAbout() =>
+            NavigationService.Navigate(typeof(Views.SettingsPage), 2);
+
     }
 }
 

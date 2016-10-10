@@ -6,16 +6,22 @@ using System.Threading.Tasks;
 using Template10.Mvvm;
 using Template10.Services.NavigationService;
 using Windows.UI.Xaml.Navigation;
+using PointingHenry10.Models;
+using System.ComponentModel;
 
 namespace PointingHenry10.ViewModels
 {
-    class CreateSessionViewModel : ViewModelBase
+    class DetailSessionViewModel : ViewModelBase
     {
-        public CreateSessionViewModel()
+        public Session SelectedSession;
+
+        public DetailSessionViewModel()
         {
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
             }
+            SelectedSession = new Session();
+            SelectedSession.Name = "default";
         }
 
 
@@ -23,8 +29,24 @@ namespace PointingHenry10.ViewModels
         {
             if (suspensionState.Any())
             {
-                //                Value = suspensionState[nameof(Value)]?.ToString();
+                
             }
+
+            var dict = parameter as Dictionary<string, string>;
+            if (dict.Count != 0)
+            {
+                var sessionName = dict["session"];
+                var nickName = dict["nick"];
+                SelectedSession.Name = $"{sessionName} created by {nickName}";
+
+                // TODO Add user to existing session
+            }
+            else
+            {
+                SelectedSession.Name = "default";
+            }
+            
+
             await Task.CompletedTask;
         }
 

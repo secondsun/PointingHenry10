@@ -43,10 +43,10 @@ namespace PointingHenry10.ViewModels
         }
         
         public void GotoJoinSession() =>
-            NavigationService.Navigate(typeof(Views.CreateSession), "");
+            NavigationService.Navigate(typeof(Views.List), "");
 
         public void GotoCreateSession() =>
-            NavigationService.Navigate(typeof(Views.CreateSession), "");
+            NavigationService.Navigate(typeof(Views.NewSession), "");
 
         public void GotoAbout() =>
             NavigationService.Navigate(typeof(Views.SettingsPage), 2);

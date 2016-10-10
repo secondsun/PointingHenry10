@@ -13,7 +13,7 @@
 
 
     <Page.DataContext>
-        <vm:CreateSessionViewModel x:Name="ViewModel" />
+        <vm:DetailSessionViewModel x:Name="DetailSessionViewModel" />
     </Page.DataContext>
 
 
@@ -27,20 +27,23 @@
                              RelativePanel.AlignTopWithPanel="True" Text="Pointing Session">
 
             <controls:PageHeader.PrimaryCommands >
-                <AppBarButton Click="{x:Bind ViewModel.ShareSession}" Label="Clear" Icon="Delete" Padding="0 0 0 0" Margin="5 0 5 0" Width="Auto"  Foreground="White" Height="Auto" />
-                <AppBarButton Click="{x:Bind ViewModel.ShareSession}" Label="Reveal" Icon="Find"  Padding="0 0 0 0" Margin="5 0 5 0" Width="Auto"  Foreground="White" Height="Auto" />
-                <AppBarButton Click="{x:Bind ViewModel.ShareSession}" Label="Share" Icon="Link" Tag="Share" Padding="0 0 0 0" Margin="5 0 5 0" Width="Auto" Height="Auto" Foreground="White" />
+                <AppBarButton Click="{x:Bind DetailSessionViewModel.ShareSession}" Label="Clear" Icon="Delete" Padding="0 0 0 0" Margin="5 0 5 0" Width="Auto"  Foreground="White" Height="Auto" />
+                <AppBarButton Click="{x:Bind DetailSessionViewModel.ShareSession}" Label="Reveal" Icon="Find"  Padding="0 0 0 0" Margin="5 0 5 0" Width="Auto"  Foreground="White" Height="Auto" />
+                <AppBarButton Click="{x:Bind DetailSessionViewModel.ShareSession}" Label="Share" Icon="Link" Tag="Share" Padding="0 0 0 0" Margin="5 0 5 0" Width="Auto" Height="Auto" Foreground="White" />
             </controls:PageHeader.PrimaryCommands>
 
 
             <!--  secondary commands  -->
             <controls:PageHeader.SecondaryCommands>
-                <AppBarButton Click="{x:Bind ViewModel.GotoAbout}" Label="About" />
+                <AppBarButton Click="{x:Bind DetailSessionViewModel.GotoAbout}" Label="About" />
             </controls:PageHeader.SecondaryCommands>
 
         </controls:PageHeader>
-        <TextBlock x:Name="storyDescriptionLabel" HorizontalAlignment="Left" Height="Auto" TextWrapping="Wrap" Text="Story Description" RelativePanel.Below="pageHeader" VerticalAlignment="Top"  Margin="15, 15, 5, 5"/>
+        <TextBlock x:Name="sessionName" HorizontalAlignment="Stretch" Height="32" RelativePanel.Below="pageHeader" TextWrapping="Wrap" Text="{x:Bind DetailSessionViewModel.SelectedSession.Name,Mode=OneWay}"  VerticalAlignment="Top"  Margin="15, 15, 5, 5"/>
+
+        <TextBlock x:Name="storyDescriptionLabel" HorizontalAlignment="Left" Height="Auto" TextWrapping="Wrap" Text="Story Description" RelativePanel.Below="sessionName" VerticalAlignment="Top"  Margin="15, 15, 5, 5"/>
         <TextBox x:Name="storyDescription" HorizontalAlignment="Stretch"  Height="32" RelativePanel.Below="storyDescriptionLabel" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True" Width="Auto" Text=""  Margin="15, 5, 15, 5"/>
+
         <ListView x:Name="listView" HorizontalAlignment="Stretch"  Height="Auto" RelativePanel.Below="storyDescription" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True" Width="Auto" Margin="15, 5, 15, 5">
             <ListViewItem>
                 <StackPanel Orientation="Horizontal">
