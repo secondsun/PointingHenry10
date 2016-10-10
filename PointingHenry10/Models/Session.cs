@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 using Template10.Mvvm;
 namespace PointingHenry10.Models
 {
-    // TODO http://stackoverflow.com/questions/28844518/bindablebase-vs-inotifychanged
-    public class Session: BindableBase
+    public class Session
     {
         private string _name;
         public string Name
@@ -15,8 +14,6 @@ namespace PointingHenry10.Models
             get { return _name;}
             set {
                 _name = value;
-                //this.OnPropertyChanged(_name);
-                //SetProperty(ref _name, value);
             }
         }
 

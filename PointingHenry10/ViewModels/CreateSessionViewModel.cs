@@ -7,20 +7,21 @@ using Template10.Mvvm;
 using Template10.Services.NavigationService;
 using Windows.UI.Xaml.Navigation;
 using PointingHenry10.Models;
+using System.ComponentModel;
 
 namespace PointingHenry10.ViewModels
 {
     class CreateSessionViewModel : ViewModelBase
     {
-        public Session Session;
+        public Session SelectedSession;
 
         public CreateSessionViewModel()
         {
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
             }
-            Session = new Session();
-            Session.Name = "default";
+            SelectedSession = new Session();
+            SelectedSession.Name = "default";
         }
 
 
@@ -28,12 +29,21 @@ namespace PointingHenry10.ViewModels
         {
             if (suspensionState.Any())
             {
-                //                Value = suspensionState[nameof(Value)]?.ToString();
                 
             }
-            //Session = new Session();
-            Session.Name = "wwwwwwww";// parameter["sessionName"];
-            // TODO cloud call to create session
+
+            var dict = parameter as Dictionary<string, string>;
+            if (dict.Count != 0)
+            {
+                var sessionName = dict["session"];
+                var nickName = dict["nick"];
+                SelectedSession.Name = $"{sessionName} created by {nickName}";
+            }
+            else
+            {
+                SelectedSession.Name = "default";
+            }
+            
 
             await Task.CompletedTask;
         }
