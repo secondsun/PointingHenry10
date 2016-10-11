@@ -62,16 +62,16 @@
 
         <TextBox x:Name="textBox" PlaceholderText="Enter your name" Text="{Binding textBox}" TextWrapping="Wrap" HorizontalAlignment="Center" Margin="16" RelativePanel.AlignLeftWithPanel="True"
             RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="pageHeader"/>
-        <ListView x:Name="listSessions" HorizontalAlignment="Center" Margin="16" RelativePanel.AlignLeftWithPanel="True"
+        <ListView ItemClick="listSessions_ItemClick" IsItemClickEnabled="True" x:Name="listSessions" HorizontalAlignment="Center" Margin="16" RelativePanel.AlignLeftWithPanel="True"
             RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="textBox">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Tapped="StackPanel_Tapped" Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Session:  " />
-                        <TextBlock Text="{Binding Name}" />
+                        <TextBlock x:Name="sessionNameText" Text="{Binding Name}" />
                         <TextBlock Text=", " />
                         <TextBlock Text="created by: " />
-                        <TextBlock Text="{Binding CreatedBy}"/>
+                        <TextBlock Text="{Binding CreatedBy.Name}"/>
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>

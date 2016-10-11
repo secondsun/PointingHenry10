@@ -18,9 +18,9 @@ namespace PointingHenry10.ViewModels
             {
             }
             Sessions = new List<Session>();
-            Sessions.Add(new Session() { Name = "Session1", CreatedBy = "Passos" });
-            Sessions.Add(new Session() { Name = "Session2", CreatedBy = "Summers" });
-            Sessions.Add(new Session() { Name = "Session3", CreatedBy = "Julio" });
+            Sessions.Add(new Session() { Name = "Session1", CreatedBy = new User() { Name = "Passos" } });
+            Sessions.Add(new Session() { Name = "Session2", CreatedBy = new User() { Name = "Summers" } });
+            Sessions.Add(new Session() { Name = "Session3", CreatedBy = new User { Name = "Julio" } });
         }
 
 
@@ -48,9 +48,9 @@ namespace PointingHenry10.ViewModels
             await Task.CompletedTask;
         }
 
-        public void GotoJoinSession()
+        public void GotoJoinDetailSession(Session session)
         {
-            NavigationService.Navigate(typeof(Views.CreateSession), "");
+            NavigationService.Navigate(typeof(Views.DetailSession), session);
         }
 
         public void GotoAbout() =>

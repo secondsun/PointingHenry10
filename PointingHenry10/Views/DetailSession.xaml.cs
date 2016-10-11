@@ -7,12 +7,12 @@ using System.Collections.ObjectModel;
 
 namespace PointingHenry10.Views
 {
-    public sealed partial class CreateSession : Page
+    public sealed partial class DetailSession : Page
     {
 
-        public CreateSession()
+        public DetailSession()
         {
-            InitializeComponent();
+           InitializeComponent();
             NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
         }
     }

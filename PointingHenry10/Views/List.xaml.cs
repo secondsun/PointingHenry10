@@ -29,22 +29,17 @@ namespace PointingHenry10.Views
             textBox.Text = "";
         }
 
-        private  async void StackPanel_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        private async void listSessions_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var sendControl = (StackPanel)sender;
-            var sessionName = ((TextBlock)(sendControl.Children[1])).Text;
+            Session selectedItem = (Session)e.ClickedItem;
             if (textBox.Text == "")
             {
-                var dialog = new MessageDialog($"Before entering session: {sessionName} you should enter a name.");
+                var dialog = new MessageDialog($"Before entering session: {selectedItem.Name} you should enter a name.");
                 await dialog.ShowAsync();
             }
             else
             {
-                // http://stackoverflow.com/questions/37976653/template-10-navigation-fails-windows-ui-xaml-controls-frame-navigationfailed-wa
-                var list = new Dictionary<string, string>() { { "session", sessionName }, { "nick", textBox.Text} };
-                string str = SerializationService.Json.Serialize(list);
-                // TODO Navigate should be done in ViewModel
-                Frame.Navigate(typeof(CreateSession), str);
+                ListViewModel.GotoJoinDetailSession(selectedItem);
             }
         }
     }
