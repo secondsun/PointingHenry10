@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="PointingHenry10.Views.CreateSession"
+    x:Class="PointingHenry10.Views.DetailSession"
      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:Behaviors="using:Template10.Behaviors"
@@ -39,7 +39,7 @@
             </controls:PageHeader.SecondaryCommands>
 
         </controls:PageHeader>
-        <TextBlock x:Name="sessionName" HorizontalAlignment="Stretch" Height="32" RelativePanel.Below="pageHeader" TextWrapping="Wrap" Text="{x:Bind DetailSessionViewModel.SelectedSession.Name,Mode=OneWay}"  VerticalAlignment="Top"  Margin="15, 15, 5, 5"/>
+        <TextBlock x:Name="sessionName" HorizontalAlignment="Stretch" Height="32" RelativePanel.Below="pageHeader" TextWrapping="Wrap" Text="{x:Bind DetailSessionViewModel.SelectedSession.Name}"  VerticalAlignment="Top"  Margin="15, 15, 5, 5"/>
 
         <TextBlock x:Name="storyDescriptionLabel" HorizontalAlignment="Left" Height="Auto" TextWrapping="Wrap" Text="Story Description" RelativePanel.Below="sessionName" VerticalAlignment="Top"  Margin="15, 15, 5, 5"/>
         <TextBox x:Name="storyDescription" HorizontalAlignment="Stretch"  Height="32" RelativePanel.Below="storyDescriptionLabel" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True" Width="Auto" Text=""  Margin="15, 5, 15, 5"/>

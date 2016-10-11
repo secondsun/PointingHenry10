@@ -48,9 +48,9 @@ namespace PointingHenry10.ViewModels
             await Task.CompletedTask;
         }
 
-        public void GotoJoinSession()
+        public void GotoJoinDetailSession(Session session)
         {
-            NavigationService.Navigate(typeof(Views.CreateSession), "");
+            NavigationService.Navigate(typeof(Views.DetailSession), session);
         }
 
         public void GotoAbout() =>

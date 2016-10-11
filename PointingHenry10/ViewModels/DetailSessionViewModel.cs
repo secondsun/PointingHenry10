@@ -32,21 +32,11 @@ namespace PointingHenry10.ViewModels
                 
             }
 
-            var dict = parameter as Dictionary<string, string>;
-            if (dict.Count != 0)
+            var session = parameter as Session;
+            if (session!= null)
             {
-                var sessionName = dict["session"];
-                var nickName = dict["nick"];
-                SelectedSession.Name = $"{sessionName} created by {nickName}";
-
-                // TODO Add user to existing session
+                SelectedSession = session;
             }
-            else
-            {
-                SelectedSession.Name = "default";
-            }
-            
-
             await Task.CompletedTask;
         }
 
