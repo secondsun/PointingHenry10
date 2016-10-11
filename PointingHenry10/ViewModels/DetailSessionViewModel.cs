@@ -21,7 +21,6 @@ namespace PointingHenry10.ViewModels
             {
             }
             SelectedSession = new Session();
-            SelectedSession.Name = "default";
         }
 
 

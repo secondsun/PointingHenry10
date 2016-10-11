@@ -71,7 +71,7 @@
                         <TextBlock x:Name="sessionNameText" Text="{Binding Name}" />
                         <TextBlock Text=", " />
                         <TextBlock Text="created by: " />
-                        <TextBlock Text="{Binding CreatedBy}"/>
+                        <TextBlock Text="{Binding CreatedBy.Name}"/>
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
