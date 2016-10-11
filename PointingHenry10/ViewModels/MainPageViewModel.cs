@@ -24,6 +24,7 @@ namespace PointingHenry10.ViewModels
             {
 //                Value = suspensionState[nameof(Value)]?.ToString();
             }
+           
             await Task.CompletedTask;
         }
 
@@ -50,7 +51,7 @@ namespace PointingHenry10.ViewModels
 
         public void GotoAbout() =>
             NavigationService.Navigate(typeof(Views.SettingsPage), 2);
-
     }
+
 }
 
