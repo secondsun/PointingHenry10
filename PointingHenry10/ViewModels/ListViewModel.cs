@@ -9,17 +9,20 @@ using PointingHenry10.Models;
 using FHSDK;
 using Newtonsoft;
 using Newtonsoft.Json;
+using System.ComponentModel;
+using System.Collections.ObjectModel;
 
 namespace PointingHenry10.ViewModels
 {
     public class ListViewModel : ViewModelBase
     {
-        public List<Session> Sessions;
+        public ObservableCollection<Session> Sessions;
         public ListViewModel()
         {
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
             }
+            Sessions = new ObservableCollection<Session>();
             RetrieveListOfSessions();
         }
 
@@ -43,7 +46,7 @@ namespace PointingHenry10.ViewModels
             if (response.Error == null)
             {
                 MessageResponse msgResponse = JsonConvert.DeserializeObject<MessageResponse>(response.RawResponse);
-                Sessions = msgResponse.Sessions;
+                msgResponse.Sessions.ToList().ForEach(item => Sessions.Add(item));
             }
             else
             {
