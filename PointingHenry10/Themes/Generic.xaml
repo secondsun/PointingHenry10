@@ -3,10 +3,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:PointingHenry10.Views">
 
-    <Style TargetType="local:CreateSession" xmlns:local2="using:PointingHenry10.Views">
+    <Style TargetType="local:DetailSession" xmlns:local2="using:PointingHenry10.Views">
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="local:CreateSession">
+                <ControlTemplate TargetType="local:DetailSession">
                     <Border
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"

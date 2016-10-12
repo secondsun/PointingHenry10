@@ -6,21 +6,24 @@ using System.Threading.Tasks;
 using Template10.Services.NavigationService;
 using Windows.UI.Xaml.Navigation;
 using PointingHenry10.Models;
+using FHSDK;
+using Newtonsoft;
+using Newtonsoft.Json;
+using System.ComponentModel;
+using System.Collections.ObjectModel;
 
 namespace PointingHenry10.ViewModels
 {
     public class ListViewModel : ViewModelBase
     {
-        public List<Session> Sessions;
+        public ObservableCollection<Session> Sessions;
         public ListViewModel()
         {
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
             }
-            Sessions = new List<Session>();
-            Sessions.Add(new Session() { Name = "Session1", CreatedBy = "Passos" });
-            Sessions.Add(new Session() { Name = "Session2", CreatedBy = "Summers" });
-            Sessions.Add(new Session() { Name = "Session3", CreatedBy = "Julio" });
+            Sessions = new ObservableCollection<Session>();
+            RetrieveListOfSessions();
         }
 
 
@@ -32,7 +35,24 @@ namespace PointingHenry10.ViewModels
             }
             await Task.CompletedTask;
         }
-
+        class MessageResponse
+        {
+            public List<Session> Sessions { get; set; }
+        }
+        private async void RetrieveListOfSessions()
+        {
+            await FHClient.Init();
+            var response = await FH.Cloud("hello", "GET", null, null);
+            if (response.Error == null)
+            {
+                MessageResponse msgResponse = JsonConvert.DeserializeObject<MessageResponse>(response.RawResponse);
+                msgResponse.Sessions.ToList().ForEach(item => Sessions.Add(item));
+            }
+            else
+            {
+                // TODO display error msg
+            }
+        }
         public override async Task OnNavigatedFromAsync(IDictionary<string, object> suspensionState, bool suspending)
         {
             if (suspending)
@@ -48,9 +68,9 @@ namespace PointingHenry10.ViewModels
             await Task.CompletedTask;
         }
 
-        public void GotoJoinSession()
+        public void GotoJoinDetailSession(Session session)
         {
-            NavigationService.Navigate(typeof(Views.CreateSession), "");
+            NavigationService.Navigate(typeof(Views.DetailSession), session);
         }
 
         public void GotoAbout() =>
