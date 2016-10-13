@@ -1,30 +1,27 @@
-﻿using Template10.Mvvm;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Template10.Services.NavigationService;
-using Windows.UI.Xaml.Navigation;
-using PointingHenry10.Models;
-using FHSDK;
-using Newtonsoft.Json;
 using System.Collections.ObjectModel;
+using System.Linq;
+using Windows.UI.Popups;
+using FHSDK;
 using FHSDK.Config;
+using Newtonsoft.Json;
+using PointingHenry10.Models;
+using PointingHenry10.Views;
 using Quobject.SocketIoClientDotNet.Client;
+using Template10.Mvvm;
 
 namespace PointingHenry10.ViewModels
 {
     public class ListViewModel : ViewModelBase
     {
-        public ObservableCollection<Session> Sessions;
         public ListViewModel()
         {
-            if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
-            {
-            }
-            Sessions = new ObservableCollection<Session>();
             RetrieveListOfSessions();
             OpenWebsocketsConnection();
         }
+
+        public ObservableCollection<Session> Sessions { get; } = new ObservableCollection<Session>();
 
         private void OpenWebsocketsConnection()
         {
@@ -39,16 +36,6 @@ namespace PointingHenry10.ViewModels
             });
         }
 
-
-        public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
-        {
-            if (suspensionState.Any())
-            {
-                //                Value = suspensionState[nameof(Value)]?.ToString();
-            }
-            await Task.CompletedTask;
-        }
-
         private async void RetrieveListOfSessions()
         {
             await FHClient.Init();
@@ -60,32 +47,14 @@ namespace PointingHenry10.ViewModels
             }
             else
             {
-                // TODO display error msg
+                await new MessageDialog(response.Error.Message).ShowAsync();
             }
         }
-        public override async Task OnNavigatedFromAsync(IDictionary<string, object> suspensionState, bool suspending)
-        {
-            if (suspending)
-            {
-                //suspensionState[nameof(Value)] = Value;
-            }
-            await Task.CompletedTask;
-        }
 
-        public override async Task OnNavigatingFromAsync(NavigatingEventArgs args)
-        {
-            args.Cancel = false;
-            await Task.CompletedTask;
-        }
-
-        public void GotoJoinDetailSession(Session session)
-        {
-            NavigationService.Navigate(typeof(Views.DetailSession), session);
-        }
+        public void GotoJoinDetailSession(Session session) => 
+            NavigationService.Navigate(typeof(DetailSession), session);
 
         public void GotoAbout() =>
-            NavigationService.Navigate(typeof(Views.SettingsPage), 2);
-
+            NavigationService.Navigate(typeof(SettingsPage), 2);
     }
 }
-
