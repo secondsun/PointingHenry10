@@ -38,17 +38,20 @@ namespace PointingHenry10.ViewModels
 
         private async void RetrieveListOfSessions()
         {
-            await FHClient.Init();
+            Busy.SetBusy(true, "Getting active Sessions...");
+
             var response = await FH.Cloud("poker", "GET", null, null);
             if (response.Error == null)
             {
                 var sessions = JsonConvert.DeserializeObject<List<Session>>(response.RawResponse);
-                sessions.ToList().ForEach(item => Sessions.Add(item));
+                sessions.ForEach(item => Sessions.Add(item));
             }
             else
             {
                 await new MessageDialog(response.Error.Message).ShowAsync();
             }
+
+            Busy.SetBusy(false);
         }
 
         public void GotoJoinDetailSession(Session session) => 
