@@ -94,6 +94,9 @@
     <Content Include="fhconfig.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="fhconfig.local.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="PointingHenry10_TemporaryKey.pfx" />
     <None Include="project.json" />
   </ItemGroup>

@@ -31,10 +31,19 @@ namespace PointingHenry10.ViewModels
 
         private void OpenWebsocketsConnection()
         {
-            var socket = IO.Socket("https://cloudappdefa7pmf.osm3.feedhenry.net/");
+            var socket = IO.Socket("https://cloudappdefa7pmf.osm3.feedhenry.net/"); //TODO take it from FH.init properties (back from FH.init)
             socket.On("sessions", (data) =>
             {
                 Sessions.Add((Session) data);
+            });
+            socket.On("sessionUpdated", (data) =>
+            {
+               
+                //var sessionUpdated = Sessions.ToList().Find(theSession => theSession.Name == ((User)data).Name);
+               // if (sessionUpdated != null)
+               // {
+               //     sessionUpdated.Users = ((Session)data).Users;
+               // }
             });
         }
 
@@ -55,7 +64,7 @@ namespace PointingHenry10.ViewModels
             if (response.Error == null)
             {
                 var sessions = JsonConvert.DeserializeObject<List<Session>>(response.RawResponse);
-                sessions.ToList().ForEach(item => Sessions.Add(item));
+                sessions.ForEach(item => Sessions.Add(item));
             }
             else
             {
@@ -77,9 +86,20 @@ namespace PointingHenry10.ViewModels
             await Task.CompletedTask;
         }
 
-        public void GotoJoinDetailSession(Session session)
+        public async void GotoJoinDetailSession(Session session)
         {
-            NavigationService.Navigate(typeof(Views.DetailSession), session);
+            // todo ask erik where he stores logged in user
+            var response = await FH.Cloud("poker/join", "POST", null, new Dictionary<string, string>() { { "session", session.Name}, { "user", "eeeeee"} });
+            if (response.Error == null)
+            {
+                var updatedSession = JsonConvert.DeserializeObject<Session>(response.RawResponse);
+                NavigationService.Navigate(typeof(Views.DetailSession), updatedSession);
+            }
+            else
+            {
+                // TODO display error msg
+            }
+            
         }
 
         public void GotoAbout() =>
