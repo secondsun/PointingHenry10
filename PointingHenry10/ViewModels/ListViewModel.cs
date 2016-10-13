@@ -47,18 +47,15 @@ namespace PointingHenry10.ViewModels
             }
             await Task.CompletedTask;
         }
-        class MessageResponse
-        {
-            public List<Session> Sessions { get; set; }
-        }
+
         private async void RetrieveListOfSessions()
         {
             await FHClient.Init();
-            var response = await FH.Cloud("hello", "GET", null, null);
+            var response = await FH.Cloud("poker", "GET", null, null);
             if (response.Error == null)
             {
-                MessageResponse msgResponse = JsonConvert.DeserializeObject<MessageResponse>(response.RawResponse);
-                msgResponse.Sessions.ToList().ForEach(item => Sessions.Add(item));
+                var sessions = JsonConvert.DeserializeObject<List<Session>>(response.RawResponse);
+                sessions.ToList().ForEach(item => Sessions.Add(item));
             }
             else
             {
