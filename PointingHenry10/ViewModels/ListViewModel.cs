@@ -11,6 +11,8 @@ using Newtonsoft;
 using Newtonsoft.Json;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using Quobject.SocketIoClientDotNet.Client;
 
 namespace PointingHenry10.ViewModels
 {
@@ -24,6 +26,16 @@ namespace PointingHenry10.ViewModels
             }
             Sessions = new ObservableCollection<Session>();
             RetrieveListOfSessions();
+            OpenWebsocketsConnection();
+        }
+
+        private void OpenWebsocketsConnection()
+        {
+            var socket = IO.Socket("https://cloudappdefa7pmf.osm3.feedhenry.net/");
+            socket.On("sessions", (data) =>
+            {
+                Sessions.Add((Session) data);
+            });
         }
 
 
