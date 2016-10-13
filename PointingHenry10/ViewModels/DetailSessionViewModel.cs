@@ -8,12 +8,19 @@ using Template10.Services.NavigationService;
 using Windows.UI.Xaml.Navigation;
 using PointingHenry10.Models;
 using System.ComponentModel;
+using FHSDK;
+using FHSDK.Config;
+using Quobject.SocketIoClientDotNet.Client;
+using Newtonsoft.Json;
+using System.Collections.ObjectModel;
 
 namespace PointingHenry10.ViewModels
 {
     class DetailSessionViewModel : ViewModelBase
     {
         public Session SelectedSession;
+        public ObservableCollection<User> Users { get; } = new ObservableCollection<User>();
+        public User LoggedUser;
 
         public DetailSessionViewModel()
         {
@@ -21,8 +28,25 @@ namespace PointingHenry10.ViewModels
             {
             }
             SelectedSession = new Session();
+            
+            ListenSocketIO();
         }
 
+        private void ListenSocketIO()
+        {
+
+            var socket = IO.Socket(FHConfig.GetInstance().GetHost());
+
+            socket.On("sessionUpdated", data =>
+            {
+                Dispatcher.Dispatch(() =>
+                {
+                    var user = JsonConvert.DeserializeObject<User>((string)data);
+                    SelectedSession.Users.Add(user); // TODO implement "room", TODO check if user is nt already in session
+                    Users.Add(user);
+                });
+            });
+        }
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
         {
@@ -30,11 +54,17 @@ namespace PointingHenry10.ViewModels
             {
                 
             }
-
-            var session = parameter as Session;
-            if (session!= null)
+            var dict = parameter as Dictionary<string, object>;
+            var session = dict["session"] as Session;
+            var user = dict["user"] as User;
+            if (session != null)
             {
                 SelectedSession = session;
+                //SelectedSession.Users.ForEach(item => Users.Add(item));
+            }
+            if (user != null)
+            {
+                LoggedUser = user;
             }
             await Task.CompletedTask;
         }

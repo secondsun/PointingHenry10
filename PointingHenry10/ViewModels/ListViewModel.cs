@@ -10,6 +10,8 @@ using PointingHenry10.Models;
 using PointingHenry10.Views;
 using Quobject.SocketIoClientDotNet.Client;
 using Template10.Mvvm;
+using System.Threading.Tasks;
+using Windows.UI.Xaml.Navigation;
 
 namespace PointingHenry10.ViewModels
 {
@@ -22,16 +24,12 @@ namespace PointingHenry10.ViewModels
         }
 
         public ObservableCollection<Session> Sessions { get; } = new ObservableCollection<Session>();
-
+        public User LoggedUser;
         private void OpenWebsocketsConnection()
         {
-<<<<<<< HEAD
-            var socket = IO.Socket("https://cloudappdefa7pmf.osm3.feedhenry.net/"); //TODO take it from FH.init properties (back from FH.init)
-            socket.On("sessions", (data) =>
-=======
+
             var socket = IO.Socket(FHConfig.GetInstance().GetHost());
             socket.On("sessions", data =>
->>>>>>> e165a367cfb34e7bd2cefe5081df66e8c489d0ae
             {
                 Dispatcher.Dispatch(() =>
                 {
@@ -39,14 +37,13 @@ namespace PointingHenry10.ViewModels
                     Sessions.Add(session);
                 });
             });
-            socket.On("sessionUpdated", (data) =>
+            socket.On("sessionUpdated", data =>
             {
-               
-                //var sessionUpdated = Sessions.ToList().Find(theSession => theSession.Name == ((User)data).Name);
-               // if (sessionUpdated != null)
-               // {
-               //     sessionUpdated.Users = ((Session)data).Users;
-               // }
+                Dispatcher.Dispatch(() =>
+                {
+                    var user = JsonConvert.DeserializeObject<User>((string)data);
+                    //Sessions.Add(session);
+                });
             });
         }
 
@@ -68,15 +65,19 @@ namespace PointingHenry10.ViewModels
             Busy.SetBusy(false);
         }
 
-<<<<<<< HEAD
+        public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
+        {
+            LoggedUser = (User)parameter;
+            return base.OnNavigatedToAsync(parameter, mode, state);
+        }
+
         public async void GotoJoinDetailSession(Session session)
         {
-            // todo ask erik where he stores logged in user
-            var response = await FH.Cloud("poker/join", "POST", null, new Dictionary<string, string>() { { "session", session.Name}, { "user", "eeeeee"} });
+            var response = await FH.Cloud("poker/join", "POST", null, new Dictionary<string, string>() { { "session", session.Name}, { "user", LoggedUser.Name} });
             if (response.Error == null)
             {
                 var updatedSession = JsonConvert.DeserializeObject<Session>(response.RawResponse);
-                NavigationService.Navigate(typeof(Views.DetailSession), updatedSession);
+                NavigationService.Navigate(typeof(Views.DetailSession), new Dictionary<string, object>() { { "session", updatedSession }, { "user", LoggedUser } });
             }
             else
             {
@@ -84,10 +85,6 @@ namespace PointingHenry10.ViewModels
             }
             
         }
-=======
-        public void GotoJoinDetailSession(Session session) => 
-            NavigationService.Navigate(typeof(DetailSession), session);
->>>>>>> e165a367cfb34e7bd2cefe5081df66e8c489d0ae
 
         public void GotoAbout() =>
             NavigationService.Navigate(typeof(SettingsPage), 2);

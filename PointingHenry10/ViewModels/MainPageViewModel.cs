@@ -35,7 +35,7 @@ namespace PointingHenry10.ViewModels
         {
             if (await IsValid())
             {
-                NavigationService.Navigate(typeof(Views.List), "");
+                NavigationService.Navigate(typeof(Views.List), User);
             }
         }
 
@@ -43,7 +43,7 @@ namespace PointingHenry10.ViewModels
         {
             if (await IsValid())
             {
-                NavigationService.Navigate(typeof(Views.NewSession), "");
+                NavigationService.Navigate(typeof(Views.NewSession), User);
             }
         }
 

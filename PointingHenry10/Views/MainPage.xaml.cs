@@ -16,11 +16,6 @@ namespace PointingHenry10.Views
             NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
         }
 
-        private void CreateSession_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             await FHClient.Init();
