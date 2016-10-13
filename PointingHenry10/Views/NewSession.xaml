@@ -5,9 +5,42 @@
     xmlns:local="using:PointingHenry10.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:PointingHenry10.ViewModels"
+    xmlns:controls="using:Template10.Controls"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:behaviors="using:Template10.Behaviors"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.DataContext>
+        <vm:NewSessionViewModel x:Name="ViewModel" />
+    </Page.DataContext>
+    <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    </Grid>
+        <controls:PageHeader x:Name="pageHeader" Frame="{x:Bind Frame}"
+                             RelativePanel.AlignLeftWithPanel="True"
+                             RelativePanel.AlignRightWithPanel="True"
+                             RelativePanel.AlignTopWithPanel="True" Text="Create new Session" />
+        <TextBox Name="sessionName" MinWidth="150" MinHeight="62" Margin="16,16,16,0"
+                 RelativePanel.AlignLeftWithPanel="True"
+                 RelativePanel.Below="pageHeader"
+                 Header="Name of the Session"
+                 Text="{Binding Session.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 TextWrapping="Wrap">
+            <interactivity:Interaction.Behaviors>
+                <!--  enable submit on enter key  -->
+                <behaviors:KeyBehavior Key="Enter">
+                    <core:CallMethodAction MethodName="SaveSession" TargetObject="{Binding}" />
+                </behaviors:KeyBehavior>
+                <!--  focus on textbox when page loads  -->
+                <core:EventTriggerBehavior>
+                    <behaviors:FocusAction />
+                </core:EventTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
+        </TextBox>
+        <Button x:Name="submitButton"
+                Click="{x:Bind ViewModel.SaveSession}" Content="Submit"
+                RelativePanel.AlignBottomWith="sessionName"
+                RelativePanel.RightOf="sessionName" />
+    </RelativePanel>
 </Page>
