@@ -24,23 +24,13 @@ namespace PointingHenry10.Views
     {
         public List()
         {
-            this.InitializeComponent();
-            listSessions.ItemsSource = this.ListViewModel.Sessions;
-            textBox.Text = "";
+            InitializeComponent();
+            listSessions.ItemsSource = ListViewModel.Sessions;
         }
 
-        private async void listSessions_ItemClick(object sender, ItemClickEventArgs e)
+        private void listSessions_ItemClick(object sender, ItemClickEventArgs e)
         {
-            Session selectedItem = (Session)e.ClickedItem;
-            if (textBox.Text == "")
-            {
-                var dialog = new MessageDialog($"Before entering session: {selectedItem.Name} you should enter a name.");
-                await dialog.ShowAsync();
-            }
-            else
-            {
-                ListViewModel.GotoJoinDetailSession(selectedItem);
-            }
+            ListViewModel.GotoJoinDetailSession((Session)e.ClickedItem);
         }
     }
 

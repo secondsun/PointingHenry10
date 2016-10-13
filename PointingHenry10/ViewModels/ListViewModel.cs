@@ -1,40 +1,43 @@
-﻿using Template10.Mvvm;
+﻿using System;
 using System.Collections.Generic;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Template10.Services.NavigationService;
-using Windows.UI.Xaml.Navigation;
-using PointingHenry10.Models;
-using FHSDK;
-using Newtonsoft;
-using Newtonsoft.Json;
-using System.ComponentModel;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
+using System.Linq;
+using Windows.UI.Popups;
+using FHSDK;
+using FHSDK.Config;
+using Newtonsoft.Json;
+using PointingHenry10.Models;
+using PointingHenry10.Views;
 using Quobject.SocketIoClientDotNet.Client;
+using Template10.Mvvm;
 
 namespace PointingHenry10.ViewModels
 {
     public class ListViewModel : ViewModelBase
     {
-        public ObservableCollection<Session> Sessions;
         public ListViewModel()
         {
-            if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
-            {
-            }
-            Sessions = new ObservableCollection<Session>();
             RetrieveListOfSessions();
             OpenWebsocketsConnection();
         }
 
+        public ObservableCollection<Session> Sessions { get; } = new ObservableCollection<Session>();
+
         private void OpenWebsocketsConnection()
         {
+<<<<<<< HEAD
             var socket = IO.Socket("https://cloudappdefa7pmf.osm3.feedhenry.net/"); //TODO take it from FH.init properties (back from FH.init)
             socket.On("sessions", (data) =>
+=======
+            var socket = IO.Socket(FHConfig.GetInstance().GetHost());
+            socket.On("sessions", data =>
+>>>>>>> e165a367cfb34e7bd2cefe5081df66e8c489d0ae
             {
-                Sessions.Add((Session) data);
+                Dispatcher.Dispatch(() =>
+                {
+                    var session = JsonConvert.DeserializeObject<Session>((string) data);
+                    Sessions.Add(session);
+                });
             });
             socket.On("sessionUpdated", (data) =>
             {
@@ -47,19 +50,10 @@ namespace PointingHenry10.ViewModels
             });
         }
 
-
-        public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
-        {
-            if (suspensionState.Any())
-            {
-                //                Value = suspensionState[nameof(Value)]?.ToString();
-            }
-            await Task.CompletedTask;
-        }
-
         private async void RetrieveListOfSessions()
         {
-            await FHClient.Init();
+            Busy.SetBusy(true, "Getting active Sessions...");
+
             var response = await FH.Cloud("poker", "GET", null, null);
             if (response.Error == null)
             {
@@ -68,24 +62,13 @@ namespace PointingHenry10.ViewModels
             }
             else
             {
-                // TODO display error msg
+                await new MessageDialog(response.Error.Message).ShowAsync();
             }
-        }
-        public override async Task OnNavigatedFromAsync(IDictionary<string, object> suspensionState, bool suspending)
-        {
-            if (suspending)
-            {
-                //suspensionState[nameof(Value)] = Value;
-            }
-            await Task.CompletedTask;
+
+            Busy.SetBusy(false);
         }
 
-        public override async Task OnNavigatingFromAsync(NavigatingEventArgs args)
-        {
-            args.Cancel = false;
-            await Task.CompletedTask;
-        }
-
+<<<<<<< HEAD
         public async void GotoJoinDetailSession(Session session)
         {
             // todo ask erik where he stores logged in user
@@ -101,10 +84,12 @@ namespace PointingHenry10.ViewModels
             }
             
         }
+=======
+        public void GotoJoinDetailSession(Session session) => 
+            NavigationService.Navigate(typeof(DetailSession), session);
+>>>>>>> e165a367cfb34e7bd2cefe5081df66e8c489d0ae
 
         public void GotoAbout() =>
-            NavigationService.Navigate(typeof(Views.SettingsPage), 2);
-
+            NavigationService.Navigate(typeof(SettingsPage), 2);
     }
 }
-
