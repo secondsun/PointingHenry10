@@ -8,6 +8,7 @@ using PointingHenry10.Models;
 using FHSDK;
 using Newtonsoft.Json;
 using System.Collections.ObjectModel;
+using FHSDK.Config;
 using Quobject.SocketIoClientDotNet.Client;
 
 namespace PointingHenry10.ViewModels
@@ -27,7 +28,7 @@ namespace PointingHenry10.ViewModels
 
         private void OpenWebsocketsConnection()
         {
-            var socket = IO.Socket("http://localhost:8001/");
+            var socket = IO.Socket(FHConfig.GetInstance().GetHost());
             socket.On("sessions", data =>
             {
                 Dispatcher.Dispatch(() =>
