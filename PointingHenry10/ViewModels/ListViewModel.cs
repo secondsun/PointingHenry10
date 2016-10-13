@@ -1,17 +1,13 @@
 ﻿using Template10.Mvvm;
 using System.Collections.Generic;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Template10.Services.NavigationService;
 using Windows.UI.Xaml.Navigation;
 using PointingHenry10.Models;
 using FHSDK;
-using Newtonsoft;
 using Newtonsoft.Json;
-using System.ComponentModel;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using Quobject.SocketIoClientDotNet.Client;
 
 namespace PointingHenry10.ViewModels
@@ -31,10 +27,14 @@ namespace PointingHenry10.ViewModels
 
         private void OpenWebsocketsConnection()
         {
-            var socket = IO.Socket("https://cloudappdefa7pmf.osm3.feedhenry.net/");
-            socket.On("sessions", (data) =>
+            var socket = IO.Socket("http://localhost:8001/");
+            socket.On("sessions", data =>
             {
-                Sessions.Add((Session) data);
+                Dispatcher.Dispatch(() =>
+                {
+                    var session = JsonConvert.DeserializeObject<Session>((string) data);
+                    Sessions.Add(session);
+                });
             });
         }
 
