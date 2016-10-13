@@ -56,14 +56,8 @@
 
         </controls:PageHeader>
 
-
-
-
-
-        <TextBox x:Name="textBox" PlaceholderText="Enter your name" Text="{Binding textBox}" TextWrapping="Wrap" HorizontalAlignment="Center" Margin="16" RelativePanel.AlignLeftWithPanel="True"
-            RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="pageHeader"/>
         <ListView ItemClick="listSessions_ItemClick" IsItemClickEnabled="True" x:Name="listSessions" HorizontalAlignment="Center" Margin="16" RelativePanel.AlignLeftWithPanel="True"
-            RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="textBox">
+            RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="pageHeader">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
