@@ -25,11 +25,10 @@ namespace PointingHenry10.ViewModels
 
         public ObservableCollection<Session> Sessions { get; } = new ObservableCollection<Session>();
         public User LoggedUser;
+        public static readonly Socket Socket = IO.Socket(FHConfig.GetInstance().GetHost());
         private void OpenWebsocketsConnection()
         {
-
-            var socket = IO.Socket(FHConfig.GetInstance().GetHost());
-            socket.On("sessions", data =>
+            Socket.On("sessions", data =>
             {
                 Dispatcher.Dispatch(() =>
                 {
@@ -66,6 +65,8 @@ namespace PointingHenry10.ViewModels
         public async void GotoJoinDetailSession(Session session)
         {
             var response = await FH.Cloud("poker/join", "POST", null, new Dictionary<string, string>() { { "session", session.Name}, { "user", LoggedUser.Name} });
+            Socket.Emit("room-join", () => { }, session.Name);
+
             if (response.Error == null)
             {
                 var updatedSession = JsonConvert.DeserializeObject<Session>(response.RawResponse);
@@ -73,9 +74,8 @@ namespace PointingHenry10.ViewModels
             }
             else
             {
-                // TODO display error msg
+                await new MessageDialog(response.Error.Message).ShowAsync();
             }
-            
         }
 
         public void GotoAbout() =>

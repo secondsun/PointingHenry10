@@ -34,10 +34,7 @@ namespace PointingHenry10.ViewModels
 
         private void ListenSocketIO()
         {
-
-            var socket = IO.Socket(FHConfig.GetInstance().GetHost());
-
-            socket.On("sessionUpdated", data =>
+            ListViewModel.Socket.On("sessionUpdated", data =>
             {
                 Dispatcher.Dispatch(() =>
                 {
