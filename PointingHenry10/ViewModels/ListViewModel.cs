@@ -37,14 +37,6 @@ namespace PointingHenry10.ViewModels
                     Sessions.Add(session);
                 });
             });
-            socket.On("sessionUpdated", data =>
-            {
-                Dispatcher.Dispatch(() =>
-                {
-                    var user = JsonConvert.DeserializeObject<User>((string)data);
-                    //Sessions.Add(session);
-                });
-            });
         }
 
         private async void RetrieveListOfSessions()

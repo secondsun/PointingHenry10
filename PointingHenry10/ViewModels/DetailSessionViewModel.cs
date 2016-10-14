@@ -42,7 +42,7 @@ namespace PointingHenry10.ViewModels
                 Dispatcher.Dispatch(() =>
                 {
                     var user = JsonConvert.DeserializeObject<User>((string)data);
-                    SelectedSession.Users.Add(user); // TODO implement "room", TODO check if user is nt already in session
+                    SelectedSession.Users.Add(user);
                     Users.Add(user);
                 });
             });
@@ -60,7 +60,8 @@ namespace PointingHenry10.ViewModels
             if (session != null)
             {
                 SelectedSession = session;
-                //SelectedSession.Users.ForEach(item => Users.Add(item));
+                Users.Clear();
+                SelectedSession.Users.ForEach(item => Users.Add(item));
             }
             if (user != null)
             {
