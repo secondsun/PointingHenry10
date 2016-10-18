@@ -26,7 +26,11 @@
             </controls:PageHeader.SecondaryCommands>
 
         </controls:PageHeader>
-        <Button x:Name="CreateSession"  VerticalAlignment="Stretch" RelativePanel.Below="pageHeader" Margin="0 42 0 0" RelativePanel.AlignHorizontalCenterWith="pageHeader" Click="{x:Bind ViewModel.GotoCreateSession}">
+        <TextBox x:Name="textBox" PlaceholderText="Enter your name" Text="{Binding User.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                 TextWrapping="Wrap" MinWidth="100" HorizontalAlignment="Center" Margin="16" 
+                 RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="pageHeader"/>
+
+        <Button x:Name="CreateSession"  VerticalAlignment="Stretch" RelativePanel.Below="textBox" Margin="0 42 0 0" RelativePanel.AlignHorizontalCenterWith="pageHeader" Click="{x:Bind ViewModel.GotoCreateSession}">
             <Button.ContentTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Vertical">

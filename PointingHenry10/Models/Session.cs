@@ -10,5 +10,6 @@ namespace PointingHenry10.Models
     {
         public string Name { get; set; }
         public User CreatedBy { get; set; }
+        public List<User> Users { get; set; } = new List<User>();
     }
 }

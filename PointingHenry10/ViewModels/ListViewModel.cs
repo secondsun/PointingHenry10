@@ -1,81 +1,72 @@
-﻿using Template10.Mvvm;
+﻿using System;
 using System.Collections.Generic;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Template10.Services.NavigationService;
-using Windows.UI.Xaml.Navigation;
-using PointingHenry10.Models;
-using FHSDK;
-using Newtonsoft;
-using Newtonsoft.Json;
-using System.ComponentModel;
 using System.Collections.ObjectModel;
+using Windows.UI.Popups;
+using FHSDK;
+using Newtonsoft.Json;
+using PointingHenry10.Models;
+using PointingHenry10.Views;
+using Template10.Mvvm;
+using System.Threading.Tasks;
+using Windows.UI.Xaml.Navigation;
+using FHSDK.FHHttpClient;
+using PointingHenry10.Services.PokerServices;
 
 namespace PointingHenry10.ViewModels
 {
     public class ListViewModel : ViewModelBase
     {
-        public ObservableCollection<Session> Sessions;
+        private readonly PokerService _pokerService = PokerService.Instance;
         public ListViewModel()
         {
-            if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
-            {
-            }
-            Sessions = new ObservableCollection<Session>();
             RetrieveListOfSessions();
-        }
-
-
-        public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
-        {
-            if (suspensionState.Any())
+            _pokerService.SessionEvent += (sender, args) =>
             {
-                //                Value = suspensionState[nameof(Value)]?.ToString();
-            }
-            await Task.CompletedTask;
+                Dispatcher.Dispatch(() => Sessions.Add(args.Session));
+            };
         }
-        class MessageResponse
-        {
-            public List<Session> Sessions { get; set; }
-        }
+
+        public ObservableCollection<Session> Sessions { get; } = new ObservableCollection<Session>();
+        private User _loggedUser;
+
         private async void RetrieveListOfSessions()
         {
-            await FHClient.Init();
-            var response = await FH.Cloud("hello", "GET", null, null);
-            if (response.Error == null)
+            Busy.SetBusy(true, "Getting active Sessions...");
+
+            try
             {
-                MessageResponse msgResponse = JsonConvert.DeserializeObject<MessageResponse>(response.RawResponse);
-                msgResponse.Sessions.ToList().ForEach(item => Sessions.Add(item));
+                var sessions = await _pokerService.GetSessions();
+                sessions.ForEach(item => Sessions.Add(item));
             }
-            else
+            catch (FHException e)
             {
-                // TODO display error msg
+                await new MessageDialog(e.Message).ShowAsync();
             }
-        }
-        public override async Task OnNavigatedFromAsync(IDictionary<string, object> suspensionState, bool suspending)
-        {
-            if (suspending)
-            {
-                //suspensionState[nameof(Value)] = Value;
-            }
-            await Task.CompletedTask;
+
+            Busy.SetBusy(false);
         }
 
-        public override async Task OnNavigatingFromAsync(NavigatingEventArgs args)
+        public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
-            args.Cancel = false;
-            await Task.CompletedTask;
+            _loggedUser = (User)parameter;
+            return base.OnNavigatedToAsync(parameter, mode, state);
         }
 
-        public void GotoJoinDetailSession(Session session)
+        public async void GotoJoinDetailSession(Session session)
         {
-            NavigationService.Navigate(typeof(Views.DetailSession), session);
+            try
+            {
+                var updatedSession = await _pokerService.JoinSession(session.Name, _loggedUser.Name);
+                NavigationService.Navigate(typeof(DetailSession),
+                    new Dictionary<string, object>() { { "session", updatedSession }, { "user", _loggedUser } });
+            }
+            catch (FHException e)
+            {
+                await new MessageDialog(e.Message).ShowAsync();
+            }
         }
 
         public void GotoAbout() =>
-            NavigationService.Navigate(typeof(Views.SettingsPage), 2);
-
+            NavigationService.Navigate(typeof(SettingsPage), 2);
     }
 }
-

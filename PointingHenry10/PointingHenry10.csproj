@@ -94,6 +94,9 @@
     <Content Include="fhconfig.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="fhconfig.local.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="PointingHenry10_TemporaryKey.pfx" />
     <None Include="project.json" />
   </ItemGroup>
@@ -104,10 +107,14 @@
     <Compile Include="Models\Session.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\PokerServices\PokerService.cs" />
+    <Compile Include="Services\PokerServices\SessionEventArgs.cs" />
+    <Compile Include="Services\PokerServices\UserEventArgs.cs" />
     <Compile Include="Services\SettingsServices\SettingsService.cs" />
     <Compile Include="ViewModels\DetailSessionViewModel.cs" />
     <Compile Include="ViewModels\ListViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
+    <Compile Include="ViewModels\NewSessionViewModel.cs" />
     <Compile Include="ViewModels\SettingsPageViewModel.cs" />
     <Compile Include="Views\Busy.xaml.cs">
       <DependentUpon>Busy.xaml</DependentUpon>
