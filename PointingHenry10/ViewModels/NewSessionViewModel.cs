@@ -1,5 +1,9 @@
-using FHSDK;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Windows.UI.Xaml.Navigation;
 using PointingHenry10.Models;
+using PointingHenry10.Services.PokerServices;
+using PointingHenry10.Views;
 using Template10.Mvvm;
 
 namespace PointingHenry10.ViewModels
@@ -10,8 +14,16 @@ namespace PointingHenry10.ViewModels
 
         public async void SaveSession()
         {
-            await FH.Cloud("poker", "POST", null, Session);
-            NavigationService.Navigate(typeof(Views.DetailSession), Session);
+            var session = await PokerService.Instance.CreateSession(Session);
+
+            NavigationService.Navigate(typeof(DetailSession),
+                new Dictionary<string, object>() { { "session", session }, { "user", Session.CreatedBy } });
+        }
+
+        public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
+        {
+            Session.CreatedBy = (User) parameter;
+            return Task.CompletedTask;
         }
     }
 }

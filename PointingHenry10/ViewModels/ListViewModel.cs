@@ -1,56 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using Windows.UI.Popups;
 using FHSDK;
-using FHSDK.Config;
 using Newtonsoft.Json;
 using PointingHenry10.Models;
 using PointingHenry10.Views;
-using Quobject.SocketIoClientDotNet.Client;
 using Template10.Mvvm;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Navigation;
+using FHSDK.FHHttpClient;
+using PointingHenry10.Services.PokerServices;
 
 namespace PointingHenry10.ViewModels
 {
     public class ListViewModel : ViewModelBase
     {
+        private readonly PokerService _pokerService = PokerService.Instance;
         public ListViewModel()
         {
             RetrieveListOfSessions();
-            OpenWebsocketsConnection();
+            _pokerService.SessionEvent += (sender, args) =>
+            {
+                Dispatcher.Dispatch(() => Sessions.Add(args.Session));
+            };
         }
 
         public ObservableCollection<Session> Sessions { get; } = new ObservableCollection<Session>();
-        public User LoggedUser;
-        public static readonly Socket Socket = IO.Socket(FHConfig.GetInstance().GetHost());
-        private void OpenWebsocketsConnection()
-        {
-            Socket.On("sessions", data =>
-            {
-                Dispatcher.Dispatch(() =>
-                {
-                    var session = JsonConvert.DeserializeObject<Session>((string) data);
-                    Sessions.Add(session);
-                });
-            });
-        }
+        private User _loggedUser;
 
         private async void RetrieveListOfSessions()
         {
             Busy.SetBusy(true, "Getting active Sessions...");
 
-            var response = await FH.Cloud("poker", "GET", null, null);
-            if (response.Error == null)
+            try
             {
-                var sessions = JsonConvert.DeserializeObject<List<Session>>(response.RawResponse);
+                var sessions = await _pokerService.GetSessions();
                 sessions.ForEach(item => Sessions.Add(item));
             }
-            else
+            catch (FHException e)
             {
-                await new MessageDialog(response.Error.Message).ShowAsync();
+                await new MessageDialog(e.Message).ShowAsync();
             }
 
             Busy.SetBusy(false);
@@ -58,23 +48,21 @@ namespace PointingHenry10.ViewModels
 
         public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
-            LoggedUser = (User)parameter;
+            _loggedUser = (User)parameter;
             return base.OnNavigatedToAsync(parameter, mode, state);
         }
 
         public async void GotoJoinDetailSession(Session session)
         {
-            var response = await FH.Cloud("poker/join", "POST", null, new Dictionary<string, string>() { { "session", session.Name}, { "user", LoggedUser.Name} });
-            Socket.Emit("room-join", () => { }, session.Name);
-
-            if (response.Error == null)
+            try
             {
-                var updatedSession = JsonConvert.DeserializeObject<Session>(response.RawResponse);
-                NavigationService.Navigate(typeof(Views.DetailSession), new Dictionary<string, object>() { { "session", updatedSession }, { "user", LoggedUser } });
+                var updatedSession = await _pokerService.JoinSession(session.Name, _loggedUser.Name);
+                NavigationService.Navigate(typeof(DetailSession),
+                    new Dictionary<string, object>() { { "session", updatedSession }, { "user", _loggedUser } });
             }
-            else
+            catch (FHException e)
             {
-                await new MessageDialog(response.Error.Message).ShowAsync();
+                await new MessageDialog(e.Message).ShowAsync();
             }
         }
 

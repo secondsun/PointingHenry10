@@ -13,10 +13,12 @@ using FHSDK.Config;
 using Quobject.SocketIoClientDotNet.Client;
 using Newtonsoft.Json;
 using System.Collections.ObjectModel;
+using PointingHenry10.Services;
+using PointingHenry10.Services.PokerServices;
 
 namespace PointingHenry10.ViewModels
 {
-    class DetailSessionViewModel : ViewModelBase
+    public class DetailSessionViewModel : ViewModelBase
     {
         public Session SelectedSession;
         public ObservableCollection<User> Users { get; } = new ObservableCollection<User>();
@@ -28,28 +30,20 @@ namespace PointingHenry10.ViewModels
             {
             }
             SelectedSession = new Session();
-            
-            ListenSocketIO();
-        }
 
-        private void ListenSocketIO()
-        {
-            ListViewModel.Socket.On("sessionUpdated", data =>
-            {
+            PokerService.Instance.SessionUpdatedEvent += (sender, args) =>
                 Dispatcher.Dispatch(() =>
                 {
-                    var user = JsonConvert.DeserializeObject<User>((string)data);
-                    SelectedSession.Users.Add(user);
-                    Users.Add(user);
+                    SelectedSession.Users.Add(args.User);
+                    Users.Add(args.User);
                 });
-            });
         }
 
-        public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
+        public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode,
+            IDictionary<string, object> suspensionState)
         {
             if (suspensionState.Any())
             {
-                
             }
             var dict = parameter as Dictionary<string, object>;
             var session = dict["session"] as Session;
@@ -88,7 +82,5 @@ namespace PointingHenry10.ViewModels
 
         public void GotoAbout() =>
             NavigationService.Navigate(typeof(Views.SettingsPage), 2);
-
-
     }
 }
