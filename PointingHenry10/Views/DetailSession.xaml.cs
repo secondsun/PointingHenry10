@@ -13,7 +13,6 @@ namespace PointingHenry10.Views
         public DetailSession()
         {
             InitializeComponent();
-            listUsers.ItemsSource = DetailSessionViewModel.Users;
             NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
         }
     }

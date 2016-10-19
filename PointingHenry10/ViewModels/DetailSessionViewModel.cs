@@ -1,27 +1,52 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
-using Template10.Mvvm;
+using System.Windows.Input;
 using Windows.UI.Xaml.Navigation;
 using PointingHenry10.Models;
-using System.Collections.ObjectModel;
 using PointingHenry10.Services.PokerServices;
+using PointingHenry10.Views;
+using Template10.Mvvm;
 
 namespace PointingHenry10.ViewModels
 {
     public class DetailSessionViewModel : ViewModelBase
     {
-        public Session SelectedSession;
-        public ObservableCollection<User> Users { get; } = new ObservableCollection<User>();
+        private readonly PokerService _pokerService = PokerService.Instance;
+
+        private ICommand _clickCommand;
         private User _loggedUser;
 
         public DetailSessionViewModel()
         {
-            PokerService.Instance.SessionUpdatedEvent += (sender, args) =>
+            _pokerService.SessionUpdatedEvent += (sender, args) =>
                 Dispatcher.Dispatch(() =>
                 {
-                    SelectedSession.Users.Add(args.User);
-                    Users.Add(args.User);
+                    var found = SelectedSession.Users.FirstOrDefault(user => user.Name.Equals(args.User.Name));
+                    if (found != null && args.User.Vote != null)
+                    {
+                        found.Vote = args.User.Vote;
+                    }
+                    else
+                    {
+                        SelectedSession.Users.Add(args.User);
+                    }
                 });
+        }
+
+        public Session SelectedSession { get; private set; }
+
+        public ICommand VoteOnClick
+        {
+            get
+            {
+                return _clickCommand ?? (_clickCommand = new DelegateCommand<string>(vote =>
+                {
+                    _loggedUser.Vote = vote;
+                    _pokerService.CastVote(SelectedSession.Name, _loggedUser);
+                }));
+            }
         }
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode,
@@ -33,8 +58,9 @@ namespace PointingHenry10.ViewModels
             if (session != null)
             {
                 SelectedSession = session;
-                Users.Clear();
-                SelectedSession.Users.ForEach(item => Users.Add(item));
+                var users = SelectedSession.Users.ToList();
+                SelectedSession.Users = new ObservableCollection<User>();
+                users.ForEach(item => SelectedSession.Users.Add(item));
             }
             if (user != null)
             {
@@ -44,10 +70,10 @@ namespace PointingHenry10.ViewModels
         }
 
         public void ShareSession() =>
-            NavigationService.Navigate(typeof(Views.SettingsPage), 2);
+            NavigationService.Navigate(typeof(SettingsPage), 2);
 
 
         public void GotoAbout() =>
-            NavigationService.Navigate(typeof(Views.SettingsPage), 2);
+            NavigationService.Navigate(typeof(SettingsPage), 2);
     }
 }
