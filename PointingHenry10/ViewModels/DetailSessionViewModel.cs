@@ -35,7 +35,7 @@ namespace PointingHenry10.ViewModels
                 });
         }
 
-        public Session SelectedSession { get; private set; }
+        public Session SelectedSession { get; } = new Session { Users = new ObservableCollection<User>()};
 
         public ICommand VoteOnClick
         {
@@ -57,9 +57,9 @@ namespace PointingHenry10.ViewModels
             var user = dict?["user"] as User;
             if (session != null)
             {
-                SelectedSession = session;
-                var users = SelectedSession.Users.ToList();
-                SelectedSession.Users = new ObservableCollection<User>();
+                var users = session.Users.ToList();
+                SelectedSession.Name = session.Name;
+                SelectedSession.CreatedBy = session.CreatedBy;
                 users.ForEach(item => SelectedSession.Users.Add(item));
             }
             if (user != null)
