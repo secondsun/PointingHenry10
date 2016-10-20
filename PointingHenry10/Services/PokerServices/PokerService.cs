@@ -58,5 +58,12 @@ namespace PointingHenry10.Services.PokerServices
             await FH.Cloud("poker", "POST", null, session);
             return await JoinSession(session.Name, session.CreatedBy.Name);
         }
+
+        public async void CastVote(string sessionName, User user)
+        {
+            await
+                FH.Cloud("poker/vote", "POST", null,
+                    new Dictionary<string, object> {{"session", sessionName}, {"user", user}});
+        }
     }
 }
