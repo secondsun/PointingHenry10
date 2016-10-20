@@ -60,6 +60,7 @@ namespace PointingHenry10.ViewModels
                 var users = session.Users.ToList();
                 SelectedSession.Name = session.Name;
                 SelectedSession.CreatedBy = session.CreatedBy;
+                SelectedSession.Users.Clear();
                 users.ForEach(item => SelectedSession.Users.Add(item));
             }
             if (user != null)
