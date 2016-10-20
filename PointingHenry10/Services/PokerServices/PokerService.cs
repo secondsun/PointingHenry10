@@ -16,6 +16,8 @@ namespace PointingHenry10.Services.PokerServices
 
         public event EventHandler<SessionEventArgs> SessionEvent;
         public event EventHandler<UserEventArgs> SessionUpdatedEvent;
+        public event EventHandler<UserEventArgs> SessionVoteEvent;
+        public event EventHandler<string> SessionFinishEvent;
 
         private PokerService()
         {
@@ -30,6 +32,17 @@ namespace PointingHenry10.Services.PokerServices
             {
                 var user = JsonConvert.DeserializeObject<User>((string) data);
                 SessionUpdatedEvent?.Invoke(this, new UserEventArgs {User = user});
+            });
+
+            _socket.On("voteUpdated", data =>
+            {
+                var user = JsonConvert.DeserializeObject<User>((string)data);
+                SessionVoteEvent?.Invoke(this, new UserEventArgs { User = user });
+            });
+
+            _socket.On("finish", data =>
+            {
+                SessionFinishEvent?.Invoke(this, (string) data);
             });
         }
 
@@ -64,6 +77,11 @@ namespace PointingHenry10.Services.PokerServices
             await
                 FH.Cloud("poker/vote", "POST", null,
                     new Dictionary<string, object> {{"session", sessionName}, {"user", user}});
+        }
+
+        public void ShowVotes(string sessionName)
+        {
+            _socket.Emit("showVotes", () => { }, sessionName);
         }
     }
 }

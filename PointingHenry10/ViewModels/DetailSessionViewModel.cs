@@ -16,26 +16,33 @@ namespace PointingHenry10.ViewModels
         private readonly PokerService _pokerService = PokerService.Instance;
 
         private ICommand _clickCommand;
+
         private User _loggedUser;
+        private ICommand _showClickCommand;
 
         public DetailSessionViewModel()
         {
             _pokerService.SessionUpdatedEvent += (sender, args) =>
+                Dispatcher.Dispatch(() => { SelectedSession.Users.Add(args.User); });
+
+            _pokerService.SessionVoteEvent += (sender, args) =>
                 Dispatcher.Dispatch(() =>
                 {
                     var found = SelectedSession.Users.FirstOrDefault(user => user.Name.Equals(args.User.Name));
-                    if (found != null && args.User.Vote != null)
+                    found.Vote = args.User.Vote;
+                });
+
+            _pokerService.SessionFinishEvent += (sender, args) =>
+                Dispatcher.Dispatch(() =>
+                {
+                    foreach (var user in SelectedSession.Users)
                     {
-                        found.Vote = args.User.Vote;
-                    }
-                    else
-                    {
-                        SelectedSession.Users.Add(args.User);
+                        user.ShowVotes = "showVotes".Equals(args);
                     }
                 });
         }
 
-        public Session SelectedSession { get; } = new Session { Users = new ObservableCollection<User>()};
+        public Session SelectedSession { get; } = new Session {Users = new ObservableCollection<User>()};
 
         public ICommand VoteOnClick
         {
@@ -48,6 +55,17 @@ namespace PointingHenry10.ViewModels
                 }));
             }
         }
+
+        public ICommand ShowVotes
+        {
+            get
+            {
+                return _showClickCommand ??
+                       (_showClickCommand = new DelegateCommand(() => _pokerService.ShowVotes(SelectedSession.Name)));
+            }
+        }
+
+        public bool IsAdmin => _loggedUser.Name.Equals(SelectedSession.CreatedBy.Name);
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode,
             IDictionary<string, object> suspensionState)
@@ -67,6 +85,8 @@ namespace PointingHenry10.ViewModels
             {
                 _loggedUser = user;
             }
+            RaisePropertyChanged(nameof(IsAdmin));
+
             await Task.CompletedTask;
         }
 
