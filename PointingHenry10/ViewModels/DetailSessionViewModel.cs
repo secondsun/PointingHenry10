@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.UI.Xaml.Navigation;
+using Microsoft.Practices.ObjectBuilder2;
 using PointingHenry10.Models;
 using PointingHenry10.Services.PokerServices;
 using PointingHenry10.Views;
@@ -33,13 +34,7 @@ namespace PointingHenry10.ViewModels
                 });
 
             _pokerService.SessionFinishEvent += (sender, args) =>
-                Dispatcher.Dispatch(() =>
-                {
-                    foreach (var user in SelectedSession.Users)
-                    {
-                        user.ShowVotes = "showVotes".Equals(args);
-                    }
-                });
+                Dispatcher.Dispatch(() => SelectedSession.Users.ForEach(user => user.ShowVotes = "showVotes".Equals(args)));
         }
 
         public Session SelectedSession { get; } = new Session {Users = new ObservableCollection<User>()};
@@ -65,7 +60,7 @@ namespace PointingHenry10.ViewModels
             }
         }
 
-        public bool IsAdmin => _loggedUser.Name.Equals(SelectedSession.CreatedBy.Name);
+        public bool IsAdmin => _loggedUser?.Name.Equals(SelectedSession.CreatedBy.Name) ?? false;
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode,
             IDictionary<string, object> suspensionState)
@@ -81,10 +76,7 @@ namespace PointingHenry10.ViewModels
                 SelectedSession.Users.Clear();
                 users.ForEach(item => SelectedSession.Users.Add(item));
             }
-            if (user != null)
-            {
-                _loggedUser = user;
-            }
+            _loggedUser = user;
             RaisePropertyChanged(nameof(IsAdmin));
 
             await Task.CompletedTask;
