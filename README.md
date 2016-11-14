@@ -1,5 +1,8 @@
 PointingHenry10
 ===============
+
+> WARNING: This repo has been moved to https://github.com/RHMAP-Sample-Mobile-Apps/pointing-dotnet-app
+
 Point poker app built with [Template10]()
 
 # Development
